@@ -6,7 +6,6 @@ namespace ADO.NET_HomeWork_1
 {
     public partial class Form1 : Form
     {
-        SqlConnection? sqlConnection = null;
         SqlConnection? sqlServer = null;
         SqlDataReader? reader = null;
         DataTable? table = null;
@@ -58,29 +57,27 @@ namespace ADO.NET_HomeWork_1
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            SqlDataReader? reader = null;
             try
             {
                 sqlServer?.Open();
-                var query = "select * from Authors Where FirstName = @p1";
-                var query2 = "select * from Authors Where FirstName = @p2";
-                var query3 = "select * from Authors Where FirstName = @p3";
-                var command = new SqlCommand(query, sqlServer);
-                var command2 = new SqlCommand(query2, sqlServer);
-                var command3 = new SqlCommand(query3, sqlServer);
+                var query = "Insert INTO Authors(Id,Firstname,Lastname) Values (@id,@firstname,@lastname)";
+                var cmd = new SqlCommand(query, sqlServer);
+                cmd.Parameters.AddWithValue("id", txtBoxId.Text);
+                cmd.Parameters.AddWithValue("firstname", txtBoxName.Text);
+                cmd.Parameters.AddWithValue("lastname", txtBoxSurname.Text);
 
-                command.Parameters.AddWithValue("@p1", txtBoxId);
-                command.Parameters.AddWithValue("@p2", txtBoxName);
-                command.Parameters.AddWithValue("@p3", txtBoxSurname);
 
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
             }
             finally
             {
                 sqlServer?.Close();
-                reader?.Close();
             }
-            dataGridView1.DataSource = table;
-
+            
         }
     }
 
